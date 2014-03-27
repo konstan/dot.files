@@ -1,0 +1,13 @@
+*~
+.DS_Store
+*.pyc
+src/build
+.settings
+.classpath
+.pydevproject
+.project
+.coverage
+*.class
+*/target/**
+pyunit.credentials.properties
+.idea
