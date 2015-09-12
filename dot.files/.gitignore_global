@@ -7,7 +7,17 @@ src/build
 .pydevproject
 .project
 .coverage
+coverage.xml
+nosetests.xml
 *.class
 */target/**
 pyunit.credentials.properties
+
+# PyCharm
 .idea
+*.iml
+*.ipr
+*.iws
+workspace.xml
+
+.*.swp
