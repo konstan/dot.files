@@ -7,11 +7,16 @@ src/build
 .pydevproject
 .project
 .coverage
+.vscode/
 coverage.xml
 nosetests.xml
 *.class
 */target/**
 pyunit.credentials.properties
+.tox/
+.python-version
+.cache/
+__pycache__
 
 # PyCharm
 .idea
@@ -21,3 +26,7 @@ pyunit.credentials.properties
 workspace.xml
 
 .*.swp
+.vagrant
+
+.nrepl-*
+.ropeproject/

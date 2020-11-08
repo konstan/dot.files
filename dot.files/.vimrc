@@ -1,6 +1,13 @@
+" Rebind <Leader> key
+let mapleader = ","
+let maplocalleader = ","
 
 autocmd! bufwritepost .vimrc source %
+set nocompatible
 
+set updatetime=250
+
+" set spell spelllang=en_us
 
 " Better copy and paste
 set pastetoggle=<F2>
@@ -17,10 +24,14 @@ if &term =~ '^screen'
     set ttymouse=xterm2
 endif
 
-" Rebind <Leader> key
-let mapleader = ","
+" vim-move - NB! breaks mapping for leader "," of paredit.vim
+"let g:move_map_keys = 0
+"vmap <C-j> <Plug>MoveBlockDown
+"vmap <C-k> <Plug>MoveBlockUp
+"nmap <A-j> <Plug>MoveLineDown
+"nmap <A-k> <Plug>MoveLineUp
 
-
+vnoremap // y/<C-R>"<CR>
 
 " Bind nohl
 " Removes highlight of your last search
@@ -28,6 +39,15 @@ noremap <C-n> :nohl<CR>
 vnoremap <C-n> :nohl<CR>
 inoremap <C-n> :nohl<CR>
 
+" Remove trailing spaces, unselect and go back to the starting location.
+noremap <Leader>t :%s/[ \t]*$//<CR> :nohl<CR> <C-o>
+vnoremap <Leader>t :%s/[ \t]*$//<CR> :nohl<CR> <C-o>
+inoremap <Leader>t :%s/[ \t]*$//<CR> :nohl<CR> <C-o>
+
+" Format paragraph
+noremap <Leader>p vipgq<CR>
+vnoremap <Leader>p vipgq<CR>
+inoremap <Leader>p vipgq<CR>
 
 " Quick save command
 "noremap <C-Z> :update<CR>
@@ -55,8 +75,8 @@ map <Leader>s :sort<CR>
 
 
 " easier moving of code blocks
-vnoremap < <gv " better indentation
-vnoremap > >gv " better indentation
+"vnoremap < <gv " better indentation
+"vnoremap > >gv " better indentation
 
 
 " Show whitespace
@@ -72,21 +92,18 @@ set t_Co=256
 color wombat256mod
 
 
-" Enable syntax highlightingon
-" You need to reload this file for the change to apply
-filetype off
-filetype plugin indent on
+" Enable syntax highlighting
 syntax on
+filetype on
+filetype plugin indent on
 
+au BufNewFile,BufRead *.boot set filetype=clojure
+au BufNewFile,BufRead *.clj setfiletype clojure
 
-" Show line numbers and lenght
-set number " show line numbers
-set tw=79  " width of document (used by gd)
-set nowrap " don't automatically wrap on load
-set fo-=t  " don't automatically wrap text when typing
-set colorcolumn=80
-highlight ColorColumn ctermbg=Black
-let &colorcolumn="80,".join(range(120,999),",")
+" Paredit
+" let g:paredit_mode = 0
+au BufNewFile,BufRead *.clj call PareditInitBuffer()
+au BufNewFile,BufRead *.boot call PareditInitBuffer()
 
 " Easier formating of paragraphs
 vmap Q gq
@@ -95,10 +112,10 @@ vmap Q gqap
 
 " Real programmers don't use TABs but spaces
 set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set shiftround
+set softtabstop=0
 set expandtab
+set shiftwidth=4
+set smarttab
 
 
 " Make search case insensiteve
@@ -120,8 +137,13 @@ set smartcase
 " curl -Sso ~/.vim/autoload/pathogen.vim \
 "    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 " New plugins go into ~/.vim/bundle/plugin-name/ folder
-call pathogen#infect()
+filetype off
 
+call pathogen#infect()
+call pathogen#helptags()
+
+filetype plugin indent on
+syntax on
 
 " ================
 " Python IDE setup
@@ -179,10 +201,45 @@ inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>
 "     http://www.vim.org/scripts/download_script.php?src_id=5492
 set nofoldenable
 
+let g:pymode_rope = 1
+let g:pep8_ignore = "E501,W601,E265"
+let g:pymode_python = 'python3'
+let g:pymode_virtualenv = 1
+let g:syntastic_python_pylint_post_args="--max-line-length=120"
 
 set wildmenu
 set noeb vb t_vb=
 
 " Ask for password when saving file required sudo access
 " cmap w!! %!sudo tee > /dev/null %
+
+" For clojure boot: https://github.com/boot-clj/boot/wiki/For-Vim-Users
+set backup
+set swapfile
+set backupdir=~/.vim-tmp
+set directory=~/.vim-tmp
+
+
+" Highlight parantheses.
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+
+" Show line numbers and lenght
+set number " show line numbers
+set tw=79  " width of document (used by gd)
+set nowrap " don't automatically wrap on load
+set fo-=t  " don't automatically wrap text when typing
+set colorcolumn=80
+highlight ColorColumn ctermbg=Black
+let &colorcolumn="80,".join(range(120,999),",")
+
+" rope causes occasional hanging of vim
+" https://github.com/python-mode/python-mode/issues/209
+let g:pymode_rope_lookup_project = 0
+
+" Highlight variable under cursor.
+autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
 

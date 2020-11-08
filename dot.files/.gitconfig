@@ -1,10 +1,8 @@
-[http]
-    sslCAPath = /usr/ssl/certs
 [user]
 	name = Konstantin Skaburskas
 	email = konstantin.skaburskas@gmail.com
 [core]
-    excludesfile = /Users/konstan/.gitignore_global
+	excludesfile = /Users/konstan/.gitignore_global
 	autocrlf = false
 	safecrlf = true
 [difftool "sourcetree"]
@@ -27,6 +25,16 @@
     type = cat-file -t
     dump = cat-file -p
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
 	required = true
+	process = git-lfs filter-process
+[http]
+	sslverify = false
+	sslVerify = false
+[commit]
+	template = /Users/konstan/.stCommitMsg
+# EFCA CodeCommit
+#[credential "https://git-codecommit.eu-west-1.amazonaws.com"]
+#    helper = !aws --profile efca-paris codecommit credential-helper $@
+#    UseHttpPath = true
